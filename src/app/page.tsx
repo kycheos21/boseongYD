@@ -781,9 +781,7 @@ export default function Page() {
                     setErrorMessage('')
                   }}
                   className="w-full p-3 border border-border rounded-md bg-background text-foreground focus:border-accent focus:ring-1 focus:ring-accent" 
-                  placeholder="010-0000-0000" 
-                  pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}"
-                  maxLength={13}
+                  placeholder="010-0000-0000"
                 />
               </div>
               <div className="md:col-span-2">
@@ -873,14 +871,26 @@ export default function Page() {
       </footer>
 
 
-      {/* Floating Contact Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      {/* Floating Contact Button - Desktop Circle, Mobile Bottom Bar */}
+      <div className="fixed bottom-0 md:bottom-6 left-0 md:left-auto right-0 md:right-6 z-50">
         <button 
           onClick={() => smoothScrollTo('contact')}
-          className="w-28 h-28 bg-accent text-accent-foreground rounded-full shadow-xl hover:bg-accent/90 transition-all flex flex-col items-center justify-center border-4 border-white hover:scale-105"
+          className="
+            w-full md:w-28 
+            h-16 md:h-28 
+            bg-accent text-accent-foreground 
+            rounded-none md:rounded-full 
+            shadow-xl hover:bg-accent/90 transition-all 
+            flex md:flex-col items-center justify-center 
+            border-t-2 md:border-4 border-white 
+            hover:scale-100 md:hover:scale-105
+          "
         >
-          <Phone className="w-6 h-6 mb-1" />
-          <span className="text-sm font-bold leading-tight">지금<br/>문의하세요</span>
+          <Phone className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-0 md:mb-1" />
+          <span className="text-base md:text-sm font-bold leading-tight">
+            <span className="inline md:hidden">지금 문의하세요</span>
+            <span className="hidden md:inline">지금<br/>문의하세요</span>
+          </span>
         </button>
       </div>
     </div>
