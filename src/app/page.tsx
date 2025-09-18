@@ -106,10 +106,11 @@ export default function Page() {
       return
     }
     
-    // 전화번호 형식 검사
-    const phoneRegex = /^[0-9]{2,3}-?[0-9]{3,4}-?[0-9]{4}$/
-    if (!phoneRegex.test(phone.replace(/-/g, ''))) {
-      setErrorMessage('올바른 전화번호 형식이 아닙니다.')
+    // 전화번호 형식 검사 (하이픈 선택사항, 10-11자리 숫자)
+    const phoneDigits = phone.replace(/-/g, '')
+    const phoneRegex = /^[0-9]{10,11}$/
+    if (!phoneRegex.test(phoneDigits)) {
+      setErrorMessage('올바른 전화번호 형식이 아닙니다. (10-11자리 숫자)')
       return
     }
     
@@ -249,9 +250,8 @@ export default function Page() {
         <div className="absolute inset-0 bg-black/60"></div>
         <div className="relative z-10 text-center text-primary-foreground w-full px-4 flex flex-col items-center justify-center h-full">
           <h1 className="korean-title fire-shadow mb-2 md:mb-4 hero-animate-title">
-            <span className="font-light">국내 최초 </span>
-            <span className="font-bold">무한리필 양대창</span>
-            <span className="font-light">구이!!!</span>
+            <span className="font-light block md:inline">국내 최초</span>
+            <span className="font-bold">무한리필 양대창구이</span>
           </h1>
           <div className="mb-4 md:mb-8 hero-animate-logo">
             <img 
