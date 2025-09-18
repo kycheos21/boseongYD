@@ -1,21 +1,29 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight, ChevronDown, Phone, MessageCircle, Star, TrendingUp, Users, DollarSign, Clock, Award, Utensils, Calculator, HeadphonesIcon, CheckCircle } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronDown, Phone, MessageCircle, Star, TrendingUp, Users, DollarSign, Clock, Award, Utensils, Calculator, HeadphonesIcon, CheckCircle, Menu, X } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 
 // 부드러운 스크롤 함수
 const smoothScrollTo = (elementId: string) => {
-  const element = document.getElementById(elementId)
-  if (element) {
-    const navHeight = 64 // 네비게이션 높이
-    const elementPosition = element.offsetTop - navHeight - 10 // 10px 여백만 추가
-    
-    window.scrollTo({
-      top: elementPosition,
-      behavior: 'smooth'
-    })
-  }
+  setTimeout(() => {
+    const element = document.getElementById(elementId)
+    if (element) {
+      // 모바일과 데스크톱에서 다른 오프셋 적용
+      const isMobile = window.innerWidth < 768
+      const navElement = document.querySelector('nav')
+      const navHeight = navElement ? navElement.offsetHeight : 64
+      
+      // 모바일에서는 햄버거 메뉴가 열려있을 수 있으므로 더 많은 오프셋 필요
+      const additionalOffset = isMobile ? 20 : 20
+      const targetPosition = element.offsetTop - navHeight - additionalOffset
+      
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      })
+    }
+  }, 100) // 메뉴 닫힘 애니메이션을 위한 딜레이
 }
 
 export default function Page() {
@@ -26,6 +34,7 @@ export default function Page() {
   const [region, setRegion] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [isMobile, setIsMobile] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const reviews = [
     { name: "김○○", rating: 5, text: "진짜 무한리필이라니! 대창이 이렇게 맛있을 줄 몰랐어요", score: "5.0" },
@@ -179,6 +188,7 @@ export default function Page() {
               />
               <h1 className="text-2xl font-bold fire-text korean-subtitle transition-all hover:scale-105" style={{display: 'none'}}>보성양대창</h1>
             </div>
+            {/* Desktop Menu */}
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
                 <button 
@@ -241,7 +251,100 @@ export default function Page() {
                 </button>
               </div>
             </div>
+            
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 rounded-md text-foreground hover:text-accent transition-colors"
+              >
+                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
+          
+          {/* Mobile Menu Dropdown */}
+          {isMenuOpen && (
+            <div className="md:hidden bg-card border-t border-border">
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                <button
+                  onClick={() => {
+                    smoothScrollTo('reviews')
+                    setIsMenuOpen(false)
+                  }}
+                  className={`block w-full text-left px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                    activeSection === 'reviews' ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-accent/10'
+                  }`}
+                >
+                  리뷰
+                </button>
+                <button
+                  onClick={() => {
+                    smoothScrollTo('sales')
+                    setIsMenuOpen(false)
+                  }}
+                  className={`block w-full text-left px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                    activeSection === 'sales' ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-accent/10'
+                  }`}
+                >
+                  매출
+                </button>
+                <button
+                  onClick={() => {
+                    smoothScrollTo('competitive')
+                    setIsMenuOpen(false)
+                  }}
+                  className={`block w-full text-left px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                    activeSection === 'competitive' ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-accent/10'
+                  }`}
+                >
+                  가맹 경쟁력
+                </button>
+                <button
+                  onClick={() => {
+                    smoothScrollTo('menu')
+                    setIsMenuOpen(false)
+                  }}
+                  className={`block w-full text-left px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                    activeSection === 'menu' ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-accent/10'
+                  }`}
+                >
+                  메뉴
+                </button>
+                <button
+                  onClick={() => {
+                    smoothScrollTo('cost')
+                    setIsMenuOpen(false)
+                  }}
+                  className={`block w-full text-left px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                    activeSection === 'cost' ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-accent/10'
+                  }`}
+                >
+                  창업비용
+                </button>
+                <button
+                  onClick={() => {
+                    smoothScrollTo('support')
+                    setIsMenuOpen(false)
+                  }}
+                  className={`block w-full text-left px-3 py-2 text-base font-medium rounded-md transition-colors ${
+                    activeSection === 'support' ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-accent/10'
+                  }`}
+                >
+                  운영·지원 시스템
+                </button>
+                <button
+                  onClick={() => {
+                    smoothScrollTo('contact')
+                    setIsMenuOpen(false)
+                  }}
+                  className="block w-full text-left px-3 py-2 text-base font-bold rounded-md fire-gradient text-primary-foreground"
+                >
+                  가맹문의
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 

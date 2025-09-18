@@ -48,13 +48,23 @@
   }
   
   html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; JavaScript로 처리 */
   }
   
   body {
     @apply bg-background text-foreground font-korean;
     background: linear-gradient(135deg, hsl(var(--charcoal-black)) 0%, hsl(var(--warm-brown)) 100%);
     min-height: 100vh;
+  }
+  
+  section[id] {
+    scroll-margin-top: 80px;
+  }
+  
+  @media (max-width: 768px) {
+    section[id] {
+      scroll-margin-top: 80px;
+    }
   }
 
   .font-korean {
