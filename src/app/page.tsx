@@ -25,7 +25,29 @@ export default function Page() {
   const [name, setName] = useState('')
   const [region, setRegion] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [isMobile, setIsMobile] = useState(false)
+
+  const reviews = [
+    { name: "김○○", rating: 5, text: "진짜 무한리필이라니! 대창이 이렇게 맛있을 줄 몰랐어요", score: "5.0" },
+    { name: "이○○", rating: 5, text: "가격 대비 정말 만족스러워요. 또 올게요!", score: "5.0" },
+    { name: "박○○", rating: 4, text: "친구들과 와서 배터지게 먹었네요 ㅋㅋ", score: "4.0" },
+    { name: "정○○", rating: 5, text: "사장님도 친절하시고 고기 질도 좋아요", score: "5.0" },
+    { name: "최○○", rating: 5, text: "무한리필 맞나요? 이 가격에 이정도면 대박", score: "5.0" },
+    { name: "한○○", rating: 4, text: "회식하기 좋은 곳이에요. 추천합니다!", score: "4.0" }
+  ]
   
+  // 모바일 감지
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   // 스크롤 감지로 활성 섹션 업데이트
   useEffect(() => {
     const handleScroll = () => {
@@ -54,26 +76,18 @@ export default function Page() {
   useEffect(() => {
     const autoSlide = setInterval(() => {
       setCurrentReview(prevReview => {
-        if (prevReview >= reviews.length - 3) {
-          // 6번째 리뷰가 오른쪽 끝에 있을 때: 첫 번째로 순환
-          return 0;
+        if (isMobile) {
+          // 모바일: 1개씩 이동, 마지막(5)에서 처음(0)으로
+          return prevReview >= reviews.length - 1 ? 0 : prevReview + 1;
         } else {
-          return prevReview + 1;
+          // 데스크톱: 3개씩 보기, 마지막 그룹에서 처음으로
+          return prevReview >= reviews.length - 3 ? 0 : prevReview + 1;
         }
       });
     }, 3000); // 3초마다 실행
 
     return () => clearInterval(autoSlide); // 컴포넌트 언마운트 시 정리
-  }, [])
-  
-  const reviews = [
-    { name: "김○○", rating: 5, text: "진짜 무한리필이라니! 대창이 이렇게 맛있을 줄 몰랐어요", score: "5.0" },
-    { name: "이○○", rating: 5, text: "가격 대비 정말 만족스러워요. 또 올게요!", score: "5.0" },
-    { name: "박○○", rating: 4, text: "친구들과 와서 배터지게 먹었네요 ㅋㅋ", score: "4.0" },
-    { name: "정○○", rating: 5, text: "사장님도 친절하시고 고기 질도 좋아요", score: "5.0" },
-    { name: "최○○", rating: 5, text: "무한리필 맞나요? 이 가격에 이정도면 대박", score: "5.0" },
-    { name: "한○○", rating: 4, text: "회식하기 좋은 곳이에요. 추천합니다!", score: "4.0" }
-  ]
+  }, [isMobile, reviews.length])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -231,30 +245,29 @@ export default function Page() {
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="relative h-[50vh] md:h-[80vh] flex items-center justify-center fire-gradient overflow-hidden">
+      <section id="hero" className="relative h-[60vh] md:h-[80vh] flex items-center justify-center fire-gradient overflow-hidden">
         <div className="absolute inset-0 bg-black/60"></div>
-        <div className="relative z-10 text-center text-primary-foreground" style={{marginTop: '100px'}}>
-          <h1 className="korean-title fire-shadow mb-4 hero-animate-title" style={{marginTop: '-250px'}}>
+        <div className="relative z-10 text-center text-primary-foreground w-full px-4 flex flex-col items-center justify-center h-full">
+          <h1 className="korean-title fire-shadow mb-2 md:mb-4 hero-animate-title">
             <span className="font-light">국내 최초 </span>
             <span className="font-bold">무한리필 양대창</span>
             <span className="font-light">구이!!!</span>
           </h1>
-          <div className="mb-8 hero-animate-logo">
+          <div className="mb-4 md:mb-8 hero-animate-logo">
             <img 
               src="/images/hero_logo.png" 
               alt="보성양대창 로고"
-              className="mx-auto h-24 w-auto fire-shadow"
+              className="mx-auto h-16 md:h-24 w-auto fire-shadow"
             />
           </div>
           <button 
             onClick={() => smoothScrollTo('contact')} 
-            className="bg-accent text-accent-foreground px-8 py-4 text-lg font-bold rounded-lg hover:bg-accent/90 transition-all shadow-lg fire-shadow cursor-pointer hero-animate-button"
-            style={{marginTop: '150px'}}
+            className="bg-accent text-accent-foreground px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-bold rounded-lg hover:bg-accent/90 transition-all shadow-lg fire-shadow cursor-pointer hero-animate-button mb-3 md:mb-4"
           >
             지금 바로 상담 받기
           </button>
-          <div className="mt-6 hero-animate-phone">
-            <a href="tel:010-7777-7777" className="text-3xl md:text-4xl font-bold text-white fire-shadow hover:scale-105 transition-transform inline-block">
+          <div className="hero-animate-phone">
+            <a href="tel:010-7777-7777" className="text-2xl md:text-4xl font-bold text-white fire-shadow hover:scale-105 transition-transform inline-block">
               010-7777-7777
             </a>
           </div>
@@ -296,19 +309,23 @@ export default function Page() {
           </div>
 
           <div className="max-w-6xl mx-auto">
-            {/* Three Reviews Display */}
+            {/* Reviews Display - 모바일 1개, 데스크톱 3개 */}
             <div className="overflow-hidden">
               <div 
                 className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentReview * (100 / 3)}%)` }}
+                style={{ 
+                  transform: isMobile 
+                    ? `translateX(-${currentReview * 100}%)` // 모바일: 1개씩 이동
+                    : `translateX(-${currentReview * (100 / 3)}%)` // 데스크톱: 3개씩 보기
+                }}
               >
                 {reviews.map((review, index) => (
-                  <div key={index} className="w-1/3 flex-shrink-0 px-3">
+                  <div key={index} className="w-full md:w-1/3 flex-shrink-0 px-3">
                     <div className="bg-card p-6 rounded-lg shadow-md border border-border h-full flex flex-col">
                       <div className="flex items-center mb-3">
                         <div className="flex text-accent mr-2">
                           {[...Array(review.rating)].map((_, i) => (
-                            <Star key={i} className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
+                            <Star key={i} className="w-4 h-4 fill-current" />
                           ))}
                         </div>
                         <span className="text-sm font-semibold text-accent">{review.score}</span>
@@ -326,11 +343,12 @@ export default function Page() {
               {/* Left Arrow */}
               <button 
                 onClick={() => {
-                  if (currentReview === 0) {
-                    // 첫 번째에서 이전: 6번째 리뷰가 오른쪽 끝에 오도록
-                    setCurrentReview(reviews.length - 3);
+                  if (isMobile) {
+                    // 모바일: 1개씩 이동
+                    setCurrentReview(currentReview === 0 ? reviews.length - 1 : currentReview - 1);
                   } else {
-                    setCurrentReview(currentReview - 1);
+                    // 데스크톱: 3개씩 이동
+                    setCurrentReview(currentReview === 0 ? reviews.length - 3 : currentReview - 1);
                   }
                 }}
                 className="bg-card p-2 rounded-full shadow-md hover:shadow-lg border border-border hover:bg-accent hover:text-accent-foreground transition-all"
@@ -338,20 +356,31 @@ export default function Page() {
                 <ChevronLeft className="w-5 h-5" />
               </button>
               
-              {/* Review Indicators - 가운데 리뷰 기준 */}
+              {/* Review Indicators */}
               <div className="flex space-x-2">
                 {reviews.map((_, index) => {
-                  // 현재 보이는 3개 리뷰 중 가운데(인덱스 1) 기준으로 활성화
-                  const middleIndex = Math.min(currentReview + 1, reviews.length - 1);
-                  const isActive = index === middleIndex;
+                  let isActive;
+                  if (isMobile) {
+                    // 모바일: 현재 리뷰와 정확히 일치
+                    isActive = index === currentReview;
+                  } else {
+                    // 데스크톱: 현재 보이는 3개 중 가운데 기준
+                    const middleIndex = Math.min(currentReview + 1, reviews.length - 1);
+                    isActive = index === middleIndex;
+                  }
                   
                   return (
                     <button
                       key={index}
                       onClick={() => {
-                        // 클릭한 리뷰가 가운데 오도록 계산
-                        const targetReview = Math.max(0, Math.min(index - 1, reviews.length - 3));
-                        setCurrentReview(targetReview);
+                        if (isMobile) {
+                          // 모바일: 클릭한 인덱스로 바로 이동
+                          setCurrentReview(index);
+                        } else {
+                          // 데스크톱: 클릭한 리뷰가 가운데 오도록 계산
+                          const targetReview = Math.max(0, Math.min(index - 1, reviews.length - 3));
+                          setCurrentReview(targetReview);
+                        }
                       }}
                       className={`w-3 h-3 rounded-full transition-all ${
                         isActive
@@ -366,11 +395,12 @@ export default function Page() {
               {/* Right Arrow */}
               <button 
                 onClick={() => {
-                  if (currentReview >= reviews.length - 3) {
-                    // 6번째 리뷰가 오른쪽 끝에 있을 때: 첫 번째로 순환
-                    setCurrentReview(0);
+                  if (isMobile) {
+                    // 모바일: 1개씩 이동
+                    setCurrentReview(currentReview >= reviews.length - 1 ? 0 : currentReview + 1);
                   } else {
-                    setCurrentReview(currentReview + 1);
+                    // 데스크톱: 3개씩 이동
+                    setCurrentReview(currentReview >= reviews.length - 3 ? 0 : currentReview + 1);
                   }
                 }}
                 className="bg-card p-2 rounded-full shadow-md hover:shadow-lg border border-border hover:bg-accent hover:text-accent-foreground transition-all"
